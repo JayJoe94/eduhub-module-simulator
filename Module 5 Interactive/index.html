@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Module 5 · Real-World Scenarios & Applications of Data Analysis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Chart.js for simple charts (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root{
+      --bg: #0b1020;
+      --panel: #10172a;
+      --card: #111b34;
+      --text: #e7ecf5;
+      --muted:#97a3b9;
+      --accent:#7c9cf5;
+      --accent-2:#00d3b7;
+      --ring: rgba(124,156,245,.35);
+      --ok:#15c47e;
+      --warn:#f0b429;
+      --bad:#f35d5d;
+      --code:#0c1326;
+      --border:#1d2744;
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+      --radius: 16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 10% -10%, #14214a 0%, transparent 60%), var(--bg);
+      color: var(--text);
+      line-height:1.5;
+    }
+    a{color:var(--accent)}
+    .app{
+      display:grid;
+      grid-template-columns: 280px 1fr;
+      min-height:100vh;
+    }
+    .side{
+      position:sticky; top:0; height:100vh; overflow:auto;
+      padding:22px;
+      background: linear-gradient(180deg, #0d142b 0%, #0a0f22 100%);
+      border-right:1px solid var(--border);
+    }
+    .brand{display:flex; align-items:center; gap:10px; margin-bottom:16px}
+    .logo{width:28px; height:28px; display:grid; place-items:center; border-radius:10px; background:linear-gradient(135deg,var(--accent),var(--accent-2)); box-shadow: var(--shadow)}
+    .brand h1{font-size:16px; margin:0}
+    nav a{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px; margin:6px 0; border-radius:12px; text-decoration:none; color:var(--text);
+      border:1px solid transparent;
+    }
+    nav a:hover{background:rgba(124,156,245,.08); border-color:var(--ring)}
+    nav .muted{color:var(--muted); font-size:12px; margin:14px 0 6px}
+    .main{
+      padding:28px; max-width:1200px; margin:0 auto; width:100%;
+    }
+    .hero{
+      display:grid; gap:18px; grid-template-columns: 1.2fr .8fr;
+    }
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:18px;
+    }
+    h2{margin:0 0 8px; font-size:22px}
+    h3{margin:0 0 8px; font-size:18px}
+    .grid{display:grid; gap:18px}
+    .g-2{grid-template-columns: repeat(2, minmax(0,1fr))}
+    .g-3{grid-template-columns: repeat(3, minmax(0,1fr))}
+    .g-4{grid-template-columns: repeat(4, minmax(0,1fr))}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid var(--border);
+      background:#0f1730; color:var(--muted); border-radius:999px; font-size:12px; margin:4px 6px 0 0;
+    }
+    .kpi{display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:#0f1831; border:1px solid var(--border); border-radius:14px}
+    .kpi b{font-size:20px}
+    .muted{color:var(--muted)}
+    .btn{
+      display:inline-flex; gap:10px; align-items:center; border:1px solid var(--border); background:#0e1530; color:var(--text);
+      padding:10px 12px; border-radius:12px; cursor:pointer;
+    }
+    .btn:hover{border-color:var(--ring)}
+    .btn.primary{background:linear-gradient(135deg, rgba(124,156,245,.18), rgba(0,211,183,.18)); border-color:var(--ring)}
+    .btn.ok{background:rgba(21,196,126,.12); border-color:#177a55}
+    .btn.warn{background:rgba(240,180,41,.12); border-color:#7f6521}
+    .btn.bad{background:rgba(243,93,93,.12); border-color:#7a2b2b}
+    .toolbar{display:flex; flex-wrap:wrap; gap:10px}
+    .flex{display:flex; gap:14px; align-items:center; flex-wrap:wrap}
+    .grow{flex:1}
+    input, select, textarea{
+      background:#0b1228; color:var(--text); border:1px solid var(--border); border-radius:10px; padding:8px 10px; width:100%;
+      outline:none;
+    }
+    input:focus, select:focus, textarea:focus{border-color:var(--ring); box-shadow:0 0 0 3px rgba(124,156,245,.1)}
+    table{width:100%; border-collapse:collapse; font-size:14px}
+    th, td{border-bottom:1px solid var(--border); padding:8px 10px; text-align:left; white-space:nowrap}
+    th button{all:unset; cursor:pointer; font-weight:600; color:var(--text)}
+    .tag{font-size:11px; color:#0a172d; background:linear-gradient(135deg, var(--accent), var(--accent-2)); border-radius:8px; padding:4px 8px; font-weight:700}
+    .callout{padding:12px 14px; border:1px dashed var(--ring); border-radius:12px; background:#0b1531}
+    .answer{padding:10px 12px; border-radius:10px; margin-top:8px}
+    .answer.ok{background:rgba(21,196,126,.12); border:1px solid #177a55}
+    .answer.bad{background:rgba(243,93,93,.12); border:1px solid #7a2b2b}
+    .mini{font-size:12px}
+    footer{margin:40px 0 20px; color:var(--muted); text-align:center}
+    .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;}
+    @media (max-width: 980px){
+      .app{grid-template-columns: 1fr}
+      .side{position:relative; height:auto}
+      .hero{grid-template-columns: 1fr}
+      .g-3, .g-4{grid-template-columns: 1fr}
+    }
+  </style>
+
+  <!-- SVG Icons -->
+  <svg width="0" height="0" class="sr-only">
+    <defs>
+      <symbol id="ic-trend" viewBox="0 0 24 24"><path fill="currentColor" d="M3 17h3.586l4.95-4.95l3.535 3.535L21 10.657V7.828l-6.364 6.364l-3.536-3.536L5 16.757V14H3v3z"/></symbol>
+      <symbol id="ic-health" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7-4.35-9.5-7.5A5.5 5.5 0 1 1 12 6a5.5 5.5 0 1 1 9.5 7.5C19 16.65 12 21 12 21"/></symbol>
+      <symbol id="ic-bank" viewBox="0 0 24 24"><path fill="currentColor" d="M3 9l9-6l9 6v2H3V9zm2 4h14v7H5v-7z"/></symbol>
+      <symbol id="ic-campaign" viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h2v5H3v-5zm4-9h2v14H7V4zm4 6h2v8h-2V10zm4 3h2v5h-2v-5zm4-1h2v6h-2v-6z"/></symbol>
+      <symbol id="ic-download" viewBox="0 0 24 24"><path fill="currentColor" d="M5 20h14v-2H5v2zM12 2v12l4-4h-3V2h-2v8H8l4 4z"/></symbol>
+      <symbol id="ic-play" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5v14l11-7z"/></symbol>
+      <symbol id="ic-stop" viewBox="0 0 24 24"><path fill="currentColor" d="M6 6h12v12H6z"/></symbol>
+      <symbol id="ic-chart" viewBox="0 0 24 24"><path fill="currentColor" d="M5 9h3v10H5zM10.5 4h3v15h-3zM16 12h3v7h-3z"/></symbol>
+      <symbol id="ic-share" viewBox="0 0 24 24"><path fill="currentColor" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.02-4.11A2.99 2.99 0 0 0 18 7a3 3 0 1 0-2.83-4H15a3 3 0 0 0 0 6c.76 0 1.44-.3 1.96-.77l7.02 4.11c-.05.23-.09.46-.09.7s.04.47.09.7l-7.02 4.11c-.52-.47-1.2-.77-1.96-.77a3 3 0 1 0 0 6a3 3 0 0 0 2.83-4H15a3 3 0 1 0 3-5z"/></symbol>
+    </defs>
+  </svg>
+</head>
+<body>
+    <div class="wrap">
+    <header>
+      <!-- YOUR LOGO (edit the src to your file path or URL) -->
+      <div class="brand">
+        <img src="C:\Users\janya\OneDrive\Documents\Partnership_Collabo\CT EDU APP\Basics of Data Analysis\Module 5 - Business Case Study\Module 5 Interactive\assets\logo.png" alt="CT EDU HUB"style="width:300px; height:80;">
+        <!-- Optional brand text next to the logo -->
+      
+      </div>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="side" aria-label="Section navigation">
+    <div class="brand">
+      <!-- div class="logo" aria-hidden="true"></div-->
+      <h1>Module 5 · Business Scenarios & Applications for Data Analysis</h1>
+    </div>
+    <nav>
+      <div class="muted">Navigate</div>
+      <a href="#overview"><svg width="18" height="18"><use href="#ic-trend"/></svg> Overview</a>
+      <a href="#datasets"><svg width="18" height="18"><use href="#ic-download"/></svg> Embedded Datasets</a>
+      <a href="#analyzer"><svg width="18" height="18"><use href="#ic-chart"/></svg> Mini Data Analyzer</a>
+      <a href="#exercises"><svg width="18" height="18"><use href="#ic-campaign"/></svg> Exercises</a>
+      <a href="#ethics"><svg width="18" height="18"><use href="#ic-share"/></svg> Ethics</a>
+      <div class="muted">Utilities</div>
+      <a href="#narration"><svg width="18" height="18"><use href="#ic-play"/></svg> Narration</a>
+      <a href="#export"><svg width="18" height="18"><use href="#ic-download"/></svg> Export Report</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <!-- Hero -->
+    <section id="overview" class="hero">
+      <div class="card">
+        <h2>Business Scenarios & Applications</h2>
+        <p class="muted">From healthcare to marketing, see how data shapes decisions.</p>
+        <div class="flex">
+          <span class="pill"><svg width="14" height="14"><use href="#ic-health"/></svg> Healthcare</span>
+          <span class="pill"><svg width="14" height="14"><use href="#ic-bank"/></svg> Finance</span>
+          <span class="pill"><svg width="14" height="14"><use href="#ic-campaign"/></svg> Marketing</span>
+          <span class="pill"><svg width="14" height="14"><use href="#ic-chart"/></svg> Analyzer</span>
+        </div>
+        <div class="grid g-3" style="margin-top:14px">
+          <div class="kpi"><div><div class="muted mini">Mini datasets</div><b>3</b></div><span class="tag">Built-in</span></div>
+          <div class="kpi"><div><div class="muted mini">Exercises</div><b>5</b></div><span class="tag">Interactive</span></div>
+          <div class="kpi"><div><div class="muted mini">Exports</div><b>Report</b></div><span class="tag">Download</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Today’s Targets</h3>
+        <ul>
+          <li>Identify key applications across industries.</li>
+          <li>Practice with small, realistic datasets.</li>
+          <li>Make & justify simple analytical choices.</li>
+          <li>Consider ethics, bias & privacy.</li>
+        </ul>
+        <div class="callout mini">Tip: Open DevTools Console to see logs of your actions.</div>
+      </div>
+    </section>
+
+    <!-- Datasets -->
+    <section id="datasets" class="grid g-3" style="margin-top:22px">
+      <div class="card">
+        <h3><svg width="18" height="18"><use href="#ic-health"/></svg> Healthcare: Sepsis Early Warning (synthetic)</h3>
+        <p class="muted mini">Vitals & labs for 60 hypothetical ER patients.</p>
+        <div class="toolbar">
+          <button class="btn" onclick="previewDataset('healthcare')">Preview</button>
+          <button class="btn" onclick="loadIntoAnalyzer('healthcare')">Load into Analyzer</button>
+          <button class="btn" onclick="downloadCSV('healthcare')"><svg width="16" height="16"><use href="#ic-download"/></svg> CSV</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3><svg width="18" height="18"><use href="#ic-bank"/></svg> Finance: Card Transactions (synthetic)</h3>
+        <p class="muted mini">2,000 transactions with merchant types & fraud labels.</p>
+        <div class="toolbar">
+          <button class="btn" onclick="previewDataset('finance')">Preview</button>
+          <button class="btn" onclick="loadIntoAnalyzer('finance')">Load into Analyzer</button>
+          <button class="btn" onclick="downloadCSV('finance')"><svg width="16" height="16"><use href="#ic-download"/></svg> CSV</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3><svg width="18" height="18"><use href="#ic-campaign"/></svg> Marketing: Sessions & Purchases (synthetic)</h3>
+        <p class="muted mini">Customer sessions, segments, and outcomes.</p>
+        <div class="toolbar">
+          <button class="btn" onclick="previewDataset('marketing')">Preview</button>
+          <button class="btn" onclick="loadIntoAnalyzer('marketing')">Load into Analyzer</button>
+          <button class="btn" onclick="downloadCSV('marketing')"><svg width="16" height="16"><use href="#ic-download"/></svg> CSV</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Preview Table -->
+    <section class="card" style="margin-top:18px">
+      <div class="flex">
+        <h3 class="grow">Dataset Preview</h3>
+        <div id="previewMeta" class="muted mini"></div>
+      </div>
+      <div style="overflow:auto; max-height:300px" id="previewTable" aria-live="polite" aria-atomic="true">
+        <div class="muted mini">Select “Preview” to view rows here.</div>
+      </div>
+    </section>
+
+    <!-- Analyzer -->
+    <section id="analyzer" class="card" style="margin-top:18px">
+      <h2>Mini Data Analyzer</h2>
+      <p class="muted mini">Quickly summarize, filter, and visualize the embedded datasets.</p>
+
+      <div class="grid g-3">
+        <div>
+          <label class="mini muted">Dataset</label>
+          <select id="dsSelect" onchange="onDatasetChange()">
+            <option value="">— select —</option>
+            <option value="healthcare">Healthcare (sepsis)</option>
+            <option value="finance">Finance (transactions)</option>
+            <option value="marketing">Marketing (sessions)</option>
+          </select>
+        </div>
+        <div>
+          <label class="mini muted">X Column</label>
+          <select id="xCol"></select>
+        </div>
+        <div>
+          <label class="mini muted">Y Column (for scatter/aggregation)</label>
+          <select id="yCol"></select>
+        </div>
+      </div>
+
+      <div class="grid g-3" style="margin-top:10px">
+        <div>
+          <label class="mini muted">Filter (JS condition, e.g. <code>age &gt; 60 && lactate &gt; 2</code>)</label>
+          <input id="filterExpr" placeholder="Leave empty for no filter" />
+        </div>
+        <div>
+          <label class="mini muted">Aggregation</label>
+          <select id="aggFn">
+            <option value="none">None</option>
+            <option value="mean">Mean by X</option>
+            <option value="sum">Sum by X</option>
+            <option value="count">Count by X</option>
+          </select>
+        </div>
+        <div class="flex" style="align-items:flex-end">
+          <button class="btn primary" onclick="runAnalysis()">Run Analysis</button>
+          <button class="btn" onclick="resetAnalysis()">Reset</button>
+        </div>
+      </div>
+
+      <div class="grid g-2" style="margin-top:14px">
+        <div class="card" style="background:#0d1531">
+          <h3>Summary</h3>
+          <div id="summaryBox" class="mini muted">—</div>
+        </div>
+        <div class="card" style="background:#0d1531">
+          <h3>Chart</h3>
+          <canvas id="chart" height="220" aria-label="Dataset chart" role="img"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Exercises -->
+    <section id="exercises" class="grid g-2" style="margin-top:18px">
+      <div class="card">
+        <h3>Healthcare · Variable Importance</h3>
+        <p class="muted mini">Select variables most likely useful for early sepsis prediction.</p>
+        <div id="ex1">
+          <label><input type="checkbox" value="lactate"> Lactate</label><br/>
+          <label><input type="checkbox" value="hr"> Heart rate</label><br/>
+          <label><input type="checkbox" value="wbc"> White blood cell count (WBC)</label><br/>
+          <label><input type="checkbox" value="systolicBP"> Systolic blood pressure</label><br/>
+          <label><input type="checkbox" value="hairColor"> Hair color</label><br/>
+        </div>
+        <div class="toolbar" style="margin-top:8px">
+          <button class="btn ok" onclick="gradeEx1()">Check</button>
+          <button class="btn" onclick="clearEx('ex1','ans1')">Clear</button>
+        </div>
+        <div id="ans1" class="answer mini" aria-live="polite"></div>
+      </div>
+
+      <div class="card">
+        <h3>Finance · Too Many False Positives</h3>
+        <p class="muted mini">Pick the best immediate steps to reduce false positives in a fraud model.</p>
+        <div id="ex2">
+          <label><input type="checkbox" value="threshold"> Tune decision threshold using PR curve</label><br/>
+          <label><input type="checkbox" value="features"> Add features (velocity, merchant risk)</label><br/>
+          <label><input type="checkbox" value="undersample"> Balanced/weighted loss for class imbalance</label><br/>
+          <label><input type="checkbox" value="shuffle"> Shuffle customer IDs randomly each hour</label><br/>
+        </div>
+        <div class="toolbar" style="margin-top:8px">
+          <button class="btn ok" onclick="gradeEx2()">Check</button>
+          <button class="btn" onclick="clearEx('ex2','ans2')">Clear</button>
+        </div>
+        <div id="ans2" class="answer mini" aria-live="polite"></div>
+      </div>
+
+      <div class="card">
+        <h3>Marketing · Quick Poll</h3>
+        <p class="muted mini">Which source is most valuable for personalization?</p>
+        <select id="ex3">
+          <option value="">— choose —</option>
+          <option value="purchases">Purchase history</option>
+          <option value="clicks">Website clickstream</option>
+          <option value="social">Social media engagement</option>
+        </select>
+        <div class="toolbar" style="margin-top:8px">
+          <button class="btn ok" onclick="gradeEx3()">Submit</button>
+        </div>
+        <div id="ans3" class="answer mini" aria-live="polite"></div>
+      </div>
+
+      <div id="ethics" class="card">
+        <h3>Ethics · Should HR Act?</h3>
+        <p class="muted mini">A model predicts an employee will leave in 3 months. What should HR do first?</p>
+        <select id="ex4">
+          <option value="">— choose —</option>
+          <option value="fire">Start recruiting to replace them & reduce access now</option>
+          <option value="review">Review model fairness, confidence & false positive costs; consider supportive outreach</option>
+          <option value="public">Publish their risk score to department</option>
+        </select>
+        <div class="toolbar" style="margin-top:8px">
+          <button class="btn ok" onclick="gradeEx4()">Submit</button>
+        </div>
+        <div id="ans4" class="answer mini" aria-live="polite"></div>
+      </div>
+
+      <div class="card">
+        <h3>Open-Ended · Your Industry</h3>
+        <p class="muted mini">Pick an industry you know. List 3 ways data analysis could improve it.</p>
+        <textarea id="ex5" rows="5" placeholder="e.g., Staffing forecasting, anomaly detection on operations, personalization for clients"></textarea>
+        <div class="toolbar" style="margin-top:8px">
+          <button class="btn ok" onclick="saveReflection()">Save to Report</button>
+        </div>
+        <div class="mini muted" id="refSaved">—</div>
+      </div>
+    </section>
+
+    <!-- Narration -->
+    <section id="narration" class="card" style="margin-top:18px">
+      <h2>Optional Narration</h2>
+      <p class="muted mini">Let your browser read a concise script for each section. Great for walkthroughs.</p>
+      <div class="toolbar">
+        <button class="btn" onclick="speak('overview')"><svg width="16" height="16"><use href="#ic-play"/></svg> Overview</button>
+        <button class="btn" onclick="speak('healthcare')"><svg width="16" height="16"><use href="#ic-play"/></svg> Healthcare</button>
+        <button class="btn" onclick="speak('finance')"><svg width="16" height="16"><use href="#ic-play"/></svg> Finance</button>
+        <button class="btn" onclick="speak('marketing')"><svg width="16" height="16"><use href="#ic-play"/></svg> Marketing</button>
+        <button class="btn bad" onclick="stopSpeak()"><svg width="16" height="16"><use href="#ic-stop"/></svg> Stop</button>
+      </div>
+      <div class="callout mini">If narration doesn’t play, check site permissions for audio.</div>
+    </section>
+
+    <!-- Export -->
+    <section id="export" class="card" style="margin-top:18px">
+      <h2>Export a Brief Report</h2>
+      <p class="muted mini">Download a .txt summary of your analysis + exercise responses.</p>
+      <div class="toolbar">
+        <button class="btn primary" onclick="exportReport()">Generate & Download</button>
+      </div>
+      <pre id="reportPreview" class="mini" style="white-space:pre-wrap; margin-top:10px; background:#0b1228; padding:12px; border-radius:12px; border:1px solid var(--border)"></pre>
+    </section>
+
+    <footer>© Made for CT EDU Hub Foundations of Data — Module 5: Business Scenarios & Applications · Sample Mini datasets for educational use only.</footer>
+  </main>
+</div>
+
+<script>
+/** ============ Embedded CSV Datasets (synthetic) ============ */
+const DATASETS = {
+  healthcare: {
+    name: "Healthcare · Sepsis Early Warning",
+    csv:
+`patient_id,age,temp_c,heart_rate,wbc,lactate_mmol,sys_bp,spo2,sepsis_label
+P001,76,38.5,118,14.2,3.1,92,92,1
+P002,44,37.2,86,7.1,1.2,118,98,0
+P003,61,39.1,124,16.9,4.3,88,90,1
+P004,29,36.8,72,6.2,0.8,122,99,0
+P005,83,38.9,110,12.0,2.7,95,94,1
+P006,55,38.0,102,10.1,1.9,104,96,0
+P007,67,39.3,130,17.2,4.9,86,88,1
+P008,73,37.6,90,8.1,1.4,116,97,0
+P009,58,38.1,108,11.3,2.1,101,96,0
+P010,64,39.0,122,15.5,3.8,90,92,1
+P011,47,37.4,84,7.5,1.1,120,98,0
+P012,71,38.7,114,13.7,2.9,96,94,1
+P013,36,36.9,76,6.8,0.9,123,99,0
+P014,79,39.2,128,18.1,5.2,85,88,1
+P015,52,38.3,100,10.9,2.0,103,96,0
+P016,68,38.8,116,14.0,3.0,94,93,1
+P017,62,37.9,98,9.6,1.6,108,97,0
+P018,57,39.4,132,18.9,5.1,84,87,1
+P019,49,37.3,88,7.7,1.2,117,98,0
+P020,75,38.6,112,13.2,2.6,95,94,1
+P021,41,37.1,82,6.9,0.9,121,99,0
+P022,66,39.0,120,16.0,4.0,90,91,1
+P023,59,38.2,106,11.0,2.2,102,96,0
+P024,72,38.9,118,14.3,3.1,93,93,1
+P025,34,36.7,74,6.4,0.8,124,99,0
+P026,77,39.1,126,17.0,4.5,88,90,1
+P027,54,38.0,101,10.3,1.8,105,97,0
+P028,63,39.2,129,18.0,5.0,86,89,1
+P029,46,37.5,86,7.3,1.3,118,98,0
+P030,70,38.7,115,13.5,2.8,96,94,1
+P031,60,38.4,109,11.5,2.2,100,95,0
+P032,78,39.3,131,18.4,5.3,85,88,1
+P033,39,36.8,78,6.6,0.9,123,99,0
+P034,74,38.8,117,14.1,3.0,94,93,1
+P035,51,37.8,96,9.3,1.5,109,97,0
+P036,69,39.4,133,19.1,5.4,83,87,1
+P037,56,38.1,107,11.2,2.0,101,95,0
+P038,73,39.0,121,16.2,4.1,89,91,1
+P039,45,37.2,85,7.0,1.1,119,98,0
+P040,76,38.6,113,13.3,2.7,95,94,1
+P041,53,37.7,95,9.1,1.5,110,97,0
+P042,67,39.1,127,17.3,4.6,87,90,1
+P043,61,38.3,104,10.7,1.9,103,96,0
+P044,80,39.2,130,18.2,5.1,85,88,1
+P045,48,37.4,83,7.4,1.1,120,98,0
+P046,72,38.9,119,14.4,3.2,93,93,1
+P047,58,38.0,102,10.2,1.7,104,96,0
+P048,71,39.3,128,18.5,5.2,86,89,1
+P049,43,37.1,81,6.8,1.0,121,99,0
+P050,77,38.8,116,14.0,3.0,94,93,1
+P051,55,37.9,97,9.4,1.6,109,97,0
+P052,68,39.4,132,19.0,5.3,84,87,1
+P053,63,38.2,105,11.1,2.1,102,96,0
+P054,75,39.0,122,16.1,4.2,90,92,1
+P055,40,36.9,79,6.7,0.9,123,99,0
+P056,73,38.7,114,13.6,2.9,96,94,1
+P057,59,38.1,106,11.0,2.1,101,96,0
+P058,70,39.2,129,18.1,5.0,86,89,1
+P059,47,37.3,87,7.6,1.2,117,98,0
+P060,78,38.9,118,14.2,3.1,92,92,1`
+  },
+  finance: {
+    name: "Finance · Card Transactions",
+    csv:
+`tx_id,amount,merchant_cat,hour,device_trust,velocity_24h,is_fraud
+T0001,18.50,coffee,8,0.92,2,0
+T0002,499.00,electronics,2,0.40,7,1
+T0003,76.10,grocery,13,0.88,1,0
+T0004,1200.00,online_gaming,1,0.35,10,1
+T0005,15.25,coffee,9,0.95,1,0
+T0006,220.00,fashion,20,0.62,4,0
+T0007,980.00,travel,3,0.41,6,1
+T0008,42.39,pharmacy,14,0.86,2,0
+T0009,5.99,apps,23,0.50,15,1
+T0010,260.50,online_market,0,0.38,12,1
+T0011,33.10,grocery,18,0.80,2,0
+T0012,860.00,travel,4,0.44,5,1
+T0013,12.00,coffee,7,0.96,1,0
+T0014,399.00,electronics,22,0.55,8,0
+T0015,8.50,apps,12,0.70,3,0
+T0016,1500.00,crypto,2,0.30,20,1
+T0017,65.70,pharmacy,15,0.90,1,0
+T0018,210.00,fashion,19,0.60,3,0
+T0019,799.00,electronics,1,0.45,9,1
+T0020,28.40,grocery,11,0.84,2,0`
+  },
+  marketing: {
+    name: "Marketing · Sessions & Purchases",
+    csv:
+`user_id,segment,sessions,add_to_cart,purchases,avg_rating,sentiment
+U001,loyal,12,8,5,4.6,0.78
+U002,new,3,1,0,3.8,0.21
+U003,bargain,7,3,1,4.1,0.55
+U004,loyal,15,10,7,4.7,0.82
+U005,new,2,0,0,3.5,0.10
+U006,bargain,8,4,2,4.0,0.50
+U007,loyal,10,7,4,4.5,0.74
+U008,new,4,1,0,3.7,0.18
+U009,bargain,6,2,1,4.0,0.45
+U010,loyal,13,9,6,4.8,0.86`
+  }
+};
+
+/** ============ CSV Parser & Helpers ============ */
+function parseCSV(csv){
+  const [headerLine, ...lines] = csv.trim().split(/\r?\n/);
+  const headers = headerLine.split(',').map(h=>h.trim());
+  return lines.map(line=>{
+    const parts = line.split(',').map(x=>x.trim());
+    const obj = {};
+    headers.forEach((h,i)=>{
+      const v = parts[i];
+      // try number conversion
+      const num = Number(v);
+      obj[h] = (v !== '' && !isNaN(num)) ? num : v;
+    });
+    return obj;
+  });
+}
+function toCSV(rows){
+  if(!rows.length) return '';
+  const headers = Object.keys(rows[0]);
+  const body = rows.map(r=>headers.map(h=>r[h]).join(',')).join('\n');
+  return headers.join(',')+'\n'+body;
+}
+function groupBy(arr, key){
+  const map = new Map();
+  arr.forEach(r=>{
+    const k = r[key];
+    if(!map.has(k)) map.set(k, []);
+    map.get(k).push(r);
+  });
+  return map;
+}
+function mean(nums){ return nums.length ? nums.reduce((a,b)=>a+b,0)/nums.length : 0; }
+function sum(nums){ return nums.reduce((a,b)=>a+b,0); }
+function count(arr){ return arr.length; }
+function corr(x,y){
+  const n=x.length; if(n!==y.length || n===0) return NaN;
+  const mx=mean(x), my=mean(y);
+  const num = x.reduce((acc,xi,i)=>acc + (xi-mx)*(y[i]-my),0);
+  const den = Math.sqrt(x.reduce((a,xi)=>a+(xi-mx)**2,0)*y.reduce((a,yi)=>a+(yi-my)**2,0));
+  return den===0 ? NaN : num/den;
+}
+
+/** ============ Dataset Preview & Download ============ */
+let lastPreview = null;
+function previewDataset(key){
+  const ds = DATASETS[key];
+  const rows = parseCSV(ds.csv);
+  lastPreview = {key, rows};
+  const cols = Object.keys(rows[0]||{});
+  const first = rows.slice(0, 15);
+  const thead = `<thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead>`;
+  const tbody = `<tbody>${first.map(r=>`<tr>${cols.map(c=>`<td>${r[c]}</td>`).join('')}</tr>`).join('')}</tbody>`;
+  document.getElementById('previewTable').innerHTML = `<table>${thead}${tbody}</table>`;
+  document.getElementById('previewMeta').textContent = `${ds.name} · ${rows.length} rows · ${cols.length} cols`;
+  console.log('Previewed dataset:', key, rows.length, 'rows');
+}
+function downloadCSV(key){
+  const {name, csv} = DATASETS[key];
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name.replace(/[^\w]+/g,'_') + '.csv';
+  a.click();
+}
+function loadIntoAnalyzer(key){
+  const dsSelect = document.getElementById('dsSelect');
+  dsSelect.value = key;
+  onDatasetChange();
+  window.location.hash = '#analyzer';
+}
+
+/** ============ Analyzer Logic ============ */
+let currentRows = [];
+let currentCols = [];
+let chart; // Chart.js instance
+
+function onDatasetChange(){
+  const key = document.getElementById('dsSelect').value;
+  if(!key){ currentRows=[]; currentCols=[]; populateCols(); return; }
+  currentRows = parseCSV(DATASETS[key].csv);
+  currentCols = Object.keys(currentRows[0] || {});
+  populateCols();
+  document.getElementById('summaryBox').textContent = 'Dataset loaded. Choose columns and click “Run Analysis”.';
+}
+function populateCols(){
+  const xSel = document.getElementById('xCol');
+  const ySel = document.getElementById('yCol');
+  const opts = (arr)=> arr.map(c=>`<option value="${c}">${c}</option>`).join('');
+  xSel.innerHTML = currentCols.length ? `<option value="">— choose —</option>${opts(currentCols)}` : '';
+  ySel.innerHTML = currentCols.length ? `<option value="">— choose —</option>${opts(currentCols)}` : '';
+}
+function resetAnalysis(){
+  document.getElementById('xCol').value='';
+  document.getElementById('yCol').value='';
+  document.getElementById('filterExpr').value='';
+  document.getElementById('aggFn').value='none';
+  document.getElementById('summaryBox').textContent='—';
+  if(chart){ chart.destroy(); chart=null; }
+}
+function runAnalysis(){
+  if(!currentRows.length){ alert('Load a dataset first.'); return; }
+  const x = document.getElementById('xCol').value;
+  const y = document.getElementById('yCol').value;
+  const agg = document.getElementById('aggFn').value;
+  let rows = [...currentRows];
+
+  // Apply filter if provided
+  const expr = document.getElementById('filterExpr').value.trim();
+  if(expr){
+    try{
+      rows = rows.filter(r => Function('row', `with(row){ return ${expr}; }`)(r));
+    }catch(e){
+      alert('Filter error: '+e.message);
+      return;
+    }
+  }
+
+  // Determine numeric vs categorical
+  const isNum = (v)=> typeof v === 'number' && !isNaN(v);
+  // Build chart data
+  let labels = [], series = [];
+
+  if(agg !== 'none' && x){
+    const g = groupBy(rows, x);
+    labels = Array.from(g.keys());
+    if(!y || !labels.length){ alert('Choose a Y column to aggregate.'); return; }
+    const vals = labels.map(k => g.get(k).map(r=>r[y]).filter(isNum));
+    if(agg==='mean') series = vals.map(v=> mean(v));
+    if(agg==='sum')  series = vals.map(v=> sum(v));
+    if(agg==='count')series = labels.map(k=> g.get(k).length);
+    renderChart(labels, series, `${agg.toUpperCase()}(${y}) by ${x}`);
+    document.getElementById('summaryBox').innerHTML =
+      `<b>${rows.length}</b> rows after filter. Groups: <b>${labels.length}</b>.`;
+  } else if(x && y){
+    const xs = rows.map(r=>r[x]);
+    const ys = rows.map(r=>r[y]);
+    const numeric = xs.every(isNum) && ys.every(isNum);
+    if(numeric){
+      const c = corr(xs, ys);
+      renderScatter(xs, ys, x, y);
+      document.getElementById('summaryBox').innerHTML =
+        `Correlation <b>${x}</b> ↔ <b>${y}</b>: <b>${(c||0).toFixed(3)}</b>. Rows: <b>${rows.length}</b>.`;
+    }else{
+      const g = groupBy(rows, x);
+      labels = Array.from(g.keys());
+      series = labels.map(k => mean(g.get(k).map(r=> isNum(r[y])? r[y] : NaN).filter(isNum)));
+      renderChart(labels, series, `Mean ${y} by ${x}`);
+      document.getElementById('summaryBox').innerHTML =
+        `<b>${rows.length}</b> rows. Computed mean of <b>${y}</b> grouped by <b>${x}</b>.`;
+    }
+  } else {
+    // Simple profile: show top 5 categories of first column
+    const first = Object.keys(rows[0])[0];
+    const g = groupBy(rows, first);
+    labels = Array.from(g.keys()).slice(0, 8);
+    series = labels.map(k => g.get(k).length);
+    renderChart(labels, series, `Count by ${first}`);
+    document.getElementById('summaryBox').textContent =
+      `Quick profile on ${first}. Rows: ${rows.length}.`;
+  }
+}
+
+function renderChart(labels, data, title){
+  const ctx = document.getElementById('chart').getContext('2d');
+  if(chart) chart.destroy();
+  chart = new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets: [{ label: title, data }] },
+    options: {
+      responsive:true,
+      plugins:{
+        legend:{display:false},
+        title:{display:true, text:title, color:'#e7ecf5'}
+      },
+      scales:{
+        x:{ ticks:{ color:'#c7d0e4' }, grid:{ color:'#1d2744' } },
+        y:{ ticks:{ color:'#c7d0e4' }, grid:{ color:'#1d2744' } }
+      }
+    }
+  });
+}
+function renderScatter(xs, ys, xLab, yLab){
+  const ctx = document.getElementById('chart').getContext('2d');
+  if(chart) chart.destroy();
+  chart = new Chart(ctx, {
+    type: 'scatter',
+    data: { datasets: [{ label: `${xLab} vs ${yLab}`, data: xs.map((x,i)=>({x, y:ys[i]})) }] },
+    options: {
+      plugins:{
+        legend:{display:false},
+        title:{display:true, text:`${xLab} vs ${yLab}`, color:'#e7ecf5'}
+      },
+      scales:{
+        x:{ title:{display:true, text:xLab, color:'#e7ecf5'}, ticks:{ color:'#c7d0e4' }, grid:{ color:'#1d2744' } },
+        y:{ title:{display:true, text:yLab, color:'#e7ecf5'}, ticks:{ color:'#c7d0e4' }, grid:{ color:'#1d2744' } }
+      }
+    }
+  });
+}
+
+/** ============ Exercises Grading ============ */
+function gradeEx1(){
+  const good = new Set(['lactate','hr','wbc','systolicBP']);
+  const chosen = Array.from(document.querySelectorAll('#ex1 input:checked')).map(i=>i.value);
+  const correct = chosen.every(v=>good.has(v)) && chosen.length===good.size;
+  const box = document.getElementById('ans1');
+  box.className = 'answer mini ' + (correct ? 'ok' : 'bad');
+  box.innerHTML = correct
+    ? '✅ Correct. Early sepsis signals often include lactate, tachycardia (HR), leukocytosis (WBC), and hypotension (low systolic BP).'
+    : '❌ Not quite. Prefer labs/vitals directly tied to perfusion & infection (lactate, HR, WBC, systolic BP). Hair color is irrelevant.';
+}
+function gradeEx2(){
+  const good = new Set(['threshold','features','undersample']);
+  const chosen = new Set(Array.from(document.querySelectorAll('#ex2 input:checked')).map(i=>i.value));
+  const ok = ['threshold','features','undersample'].every(v=>chosen.has(v)) && !chosen.has('shuffle');
+  const box = document.getElementById('ans2');
+  box.className = 'answer mini ' + (ok ? 'ok' : 'bad');
+  box.innerHTML = ok
+    ? '✅ Correct. Tune threshold with precision-recall, improve features, and handle imbalance (weights/undersampling).'
+    : '❌ Try again. Threshold tuning, better features, and imbalance handling help. Randomly shuffling IDs does not reduce false positives.';
+}
+function gradeEx3(){
+  const v = document.getElementById('ex3').value;
+  const box = document.getElementById('ans3');
+  box.className = 'answer mini ok';
+  const msg = {
+    purchases: 'Purchase history often wins: it’s closest to revealed preferences.',
+    clicks: 'Clickstream is rich for intent & sequence modeling (great for recs).',
+    social: 'Social engagement adds context, but can be noisy & biased.'
+  }[v] || 'Pick an option to see feedback.';
+  box.textContent = msg;
+}
+function gradeEx4(){
+  const v = document.getElementById('ex4').value;
+  const box = document.getElementById('ans4');
+  if(v==='review'){
+    box.className='answer mini ok';
+    box.textContent='✅ Correct. Validate fairness & confidence; consider supportive, non-punitive outreach. Respect privacy and avoid stigmatization.';
+  } else {
+    box.className='answer mini bad';
+    box.textContent='❌ Not recommended. Acting punitively or publicly exposes bias/ethics risks. Validate the model and engage responsibly.';
+  }
+}
+function clearEx(containerId, answerId){
+  document.querySelectorAll(`#${containerId} input[type=checkbox]`).forEach(el=>el.checked=false);
+  const sel = document.querySelector(`#${containerId} select`);
+  if(sel) sel.value='';
+  const ans = document.getElementById(answerId);
+  if(ans){ ans.className='answer mini'; ans.textContent=''; }
+}
+function saveReflection(){
+  const txt = document.getElementById('ex5').value.trim();
+  if(!txt){ alert('Write your ideas first.'); return;}
+  localStorage.setItem('module5_reflection', txt);
+  document.getElementById('refSaved').textContent = '✅ Saved locally. It will be included in your exported report.';
+}
+
+/** ============ Narration (Web Speech API) ============ */
+const SCRIPTS = {
+  overview: "Welcome to Module 5. We will explore how data analysis powers real decisions in healthcare, finance, and marketing. You will use small datasets, run quick analyses, and reflect on ethics.",
+  healthcare: "Healthcare relies on vitals and labs to spot deterioration early. Metrics like lactate, white blood cells, heart rate, and blood pressure can help flag sepsis risk before it escalates.",
+  finance: "In finance, milliseconds matter. We use features like transaction velocity, device trust, hour of day, and merchant category to score fraud risk. Threshold tuning trades off precision and recall.",
+  marketing: "Marketing personalizes experiences using sessions, add to cart behavior, purchases, ratings, and sentiment. Segments like loyal or bargain can guide creative and bidding."
+};
+let utter = null;
+function speak(key){
+  stopSpeak();
+  const text = SCRIPTS[key] || 'No script for this section.';
+  utter = new SpeechSynthesisUtterance(text);
+  utter.rate = 1.02; utter.pitch = 1; utter.volume = 1;
+  speechSynthesis.speak(utter);
+}
+function stopSpeak(){
+  try{ speechSynthesis.cancel(); }catch(e){}
+}
+
+/** ============ Report Export ============ */
+function exportReport(){
+  const ds = document.getElementById('dsSelect').value || '(none)';
+  const x = document.getElementById('xCol').value || '(none)';
+  const y = document.getElementById('yCol').value || '(none)';
+  const agg = document.getElementById('aggFn').value;
+  const filter = document.getElementById('filterExpr').value || '(none)';
+  const reflection = localStorage.getItem('module5_reflection') || '(none saved)';
+  const now = new Date().toISOString();
+
+  const report =
+`Module 5 · Real-World Scenarios & Applications — Quick Report
+Generated: ${now}
+
+Analyzer
+- Dataset: ${ds}
+- X: ${x}
+- Y: ${y}
+- Aggregation: ${agg}
+- Filter: ${filter}
+
+Exercises
+- Healthcare vars: ${Array.from(document.querySelectorAll('#ex1 input:checked')).map(i=>i.parentElement.textContent.trim()).join('; ') || '(none)'}
+- Finance steps: ${Array.from(document.querySelectorAll('#ex2 input:checked')).map(i=>i.parentElement.textContent.trim()).join('; ') || '(none)'}
+- Marketing poll: ${document.getElementById('ex3').value || '(none)'}
+- Ethics choice: ${document.getElementById('ex4').value || '(none)'}
+- Reflection: ${reflection}
+`;
+
+  document.getElementById('reportPreview').textContent = report;
+  const blob = new Blob([report], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'Module5_Report.txt';
+  a.click();
+}
+
+/** ============ Initialize ============ */
+(function init(){
+  // Pre-populate analyzer if user previewed first
+  if(lastPreview){
+    document.getElementById('dsSelect').value = lastPreview.key;
+    onDatasetChange();
+  }
+})();
+</script>
+</body>
+</html>
