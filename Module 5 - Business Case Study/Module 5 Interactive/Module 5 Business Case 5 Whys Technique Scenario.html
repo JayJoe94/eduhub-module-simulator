@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Module 5 — Business Scenarios & Applications (The 5 Whys Techniques)</title>
+<style>
+  :root{
+    --bg:#0f172a;
+    --panel:#111827;
+    --card:#0b1220;
+    --ink:#e5e7eb;
+    --muted:#9ca3af;
+    --accent:#3b82f6;   /* blue */
+    --accent-2:#22d3ee; /* teal/sky */
+  }
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+    background: radial-gradient(1200px 800px at 120% -10%, rgba(59,130,246,.15), transparent 60%),
+                radial-gradient(1000px 600px at -10% 110%, rgba(34,211,238,.12), transparent 60%),
+                var(--bg);
+    color:var(--ink);
+    line-height:1.6;
+  }
+  .wrap{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+  }
+  /* brand/logo */
+  .brand { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+  .brand img { height:50px; width:auto; display:block; }
+  .brand-name { font-weight:700; color:var(--accent); }
+
+  header h1{font-size: clamp(1.6rem, 1.2rem + 2vw, 2.2rem); margin:0 0 6px}
+  header p{margin:.25rem 0;color:var(--muted)}
+  .toolbar{
+    display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+    margin:18px 0 24px;
+  }
+  button, .ghost{
+    border:1px solid rgba(229,231,235,.15);
+    background:linear-gradient(180deg, rgba(59,130,246,.18), rgba(59,130,246,.10));
+    color:var(--ink);
+    padding:10px 14px; border-radius:10px; cursor:pointer;
+    font-weight:600; letter-spacing:.2px;
+  }
+  button:hover{border-color:rgba(229,231,235,.35)}
+  .ghost{
+    background:transparent;
+  }
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;
+    padding:16px 18px;
+    margin:14px 0;
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  }
+  h2{margin:8px 0 8px; font-size:1.15rem}
+  .hint{color:var(--muted); font-size:.95rem}
+  details{
+    background: rgba(17,24,39,.55);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;
+    padding:12px 14px;
+    margin:10px 0;
+  }
+  summary{
+    list-style:none;
+    cursor:pointer;
+    font-weight:700;
+    display:flex; align-items:center; gap:10px;
+  }
+  summary::before{
+    content:"►";
+    font-size:.9rem; color:var(--accent-2);
+    transition: transform .2s ease;
+  }
+  details[open] summary::before{ transform: rotate(90deg); }
+  .pill{
+    display:inline-block; font-size:.78rem; padding:2px 8px; border-radius:999px;
+    border:1px solid rgba(255,255,255,.18); color:var(--accent-2); margin-left:6px;
+  }
+  .why{font-weight:700; color:var(--accent)}
+  .action{border-left:3px solid var(--accent); padding-left:10px; margin-top:6px}
+  footer{margin-top:36px; color:var(--muted); font-size:.9rem}
+  .grid{
+    display:grid; gap:14px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    margin-top:10px;
+  }
+  .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+       background: rgba(255,255,255,.08); padding:2px 6px; border-radius:6px; border:1px solid rgba(255,255,255,.15)}
+  .success{color:#4ade80}
+  .warning{color:#fbbf24}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <!-- YOUR LOGO (edit the src to your file path or URL) -->
+      <div class="brand">
+        <img src="C:\Users\janya\OneDrive\Documents\Partnership_Collabo\CT EDU APP\Basics of Data Analysis\Module 5 - Business Case Study\Module 5 Interactive\assets\logo.png" alt="CT EDU HUB">
+        <!-- Optional brand text next to the logo -->
+      
+      </div>
+
+      <h1>Module 5: Business Scenarios & Applications for the 5 Whys Technique</h1>
+      <p>Apply <strong>Data Analysis</strong> + the <strong>5 Whys</strong> to uncover root causes. Click each step to reveal the reasoning.</p>
+      <div class="toolbar">
+        <button id="expandAll">Expand all</button>
+        <button id="collapseAll" class="ghost">Collapse all</button>
+        <span class="hint">Tip: Use <span class="kbd">Tab</span> to jump between sections; press <span class="kbd">Enter</span> to toggle.</span>
+      </div>
+    </header>
+
+    <section class="card" aria-labelledby="why-matters">
+      <h2 id="why-matters">1) Why this matters <span class="pill">Warm‑up</span></h2>
+      <p>Data tells you <em>what</em> happened. The 5 Whys helps you get to <em>why</em> it happened, so your actions hit the root cause, not the symptom.</p>
+      <details>
+        <summary> Reflection prompt</summary>
+        <p>Think of a recent issue in your work. What was the surface symptom? What might be a deeper cause?</p>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>2) Healthcare — Reduce ER Wait Times</h2>
+      <p class="hint">Scenario: Long ER waits. Goal: &lt; 1 hour.</p>
+
+      <details><summary><span class="why">Why 1</span>: Why are patients waiting so long?</summary>
+        <p>Not enough clinicians scheduled during peak hours (2–6 pm).</p>
+      </details>
+
+      <details><summary><span class="why">Why 2</span>: Why not enough clinicians at peaks?</summary>
+        <p>Schedules don’t match demand patterns.</p>
+      </details>
+
+      <details><summary><span class="why">Why 3</span>: Why don’t schedules match demand?</summary>
+        <p>Staffing plan relies on outdated arrival data.</p>
+      </details>
+
+      <details><summary><span class="why">Why 4</span>: Why is the data outdated?</summary>
+        <p>No real‑time patient flow tracking.</p>
+      </details>
+
+      <details><summary><span class="why">Why 5</span>: Why no real‑time tracking?</summary>
+        <p>Budget not allocated for the upgrade.</p>
+      </details>
+
+      <div class="action"><strong>Action:</strong> Add real‑time tracking; re‑optimize rosters to peak demand.</div>
+
+      <details><summary> Check your thinking</summary>
+        <p>What additional metrics would you monitor (e.g., triage-to-room time, LWBS rate, bed turnover)?</p>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>3) Finance — Drop in Credit Card Usage</h2>
+      <p class="hint">Scenario: 15% Q3 usage drop, concentrated ages 25–34.</p>
+
+      <details><summary><span class="why">Why 1</span>: Why did usage drop?</summary>
+        <p>Customers moved spend to a competitor card.</p>
+      </details>
+
+      <details><summary><span class="why">Why 2</span>: Why switch to competitor?</summary>
+        <p>More compelling online‑shopping rewards.</p>
+      </details>
+
+      <details><summary><span class="why">Why 3</span>: Why were their rewards better?</summary>
+        <p>They tailored benefits after segment research.</p>
+      </details>
+
+      <details><summary><span class="why">Why 4</span>: Why didn’t we match?</summary>
+        <p>No segment‑specific analysis or testing.</p>
+      </details>
+
+      <details><summary><span class="why">Why 5</span>: Why no targeted analysis?</summary>
+        <p>Data tools aren’t optimized for cohort insights.</p>
+      </details>
+
+      <div class="action"><strong>Action:</strong> Launch targeted rewards for 25–34; run rapid A/B tests; instrument cohort analytics.</div>
+
+      <details><summary>Mini‑challenge</summary>
+        <p>List datasets to review before launch (e.g., wallet‑share, merchant mix, churn risk, CAC/LTV by cohort).</p>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>4) Marketing — High Engagement, Low Conversions</h2>
+      <p class="hint">Scenario: Instagram ads: CTR 8% (great) → conversion 0.5% (poor).</p>
+
+      <details><summary><span class="why">Why 1</span>: Why low sales despite high engagement?</summary>
+        <p>Users drop after clicking.</p>
+      </details>
+
+      <details><summary><span class="why">Why 2</span>: Why the post‑click drop?</summary>
+        <p>Mobile site loads slowly.</p>
+      </details>
+
+      <details><summary><span class="why">Why 3</span>: Why slow on mobile?</summary>
+        <p>Images not optimized; heavy scripts.</p>
+      </details>
+
+      <details><summary><span class="why">Why 4</span>: Why not optimized?</summary>
+        <p>No process/ownership for mobile performance.</p>
+      </details>
+
+      <details><summary><span class="why">Why 5</span>: Why no process?</summary>
+        <p>No scheduled audits or SLAs.</p>
+      </details>
+
+      <div class="action"><strong>Action:</strong> Optimize images & scripts; add quarterly performance audits; test checkout UX.</div>
+
+      <details><summary> Quick poll (discuss)</summary>
+        <p>Would speed fixes be enough, or would you also test offer, product‑page layout, trust badges, and payment options?</p>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>5) Build Your Own 5 Whys <span class="pill">Practice</span></h2>
+      <p>Pick an industry you know. Write your chain below, then compare to the examples above.</p>
+      <div class="grid">
+        <div>
+          <details><summary><span class="why">Why 1</span> — Your first reason</summary><p>Write your hypothesis.</p></details>
+          <details><summary><span class="why">Why 2</span> — Dig deeper</summary><p>Write your hypothesis.</p></details>
+          <details><summary><span class="why">Why 3</span> — Keep going</summary><p>Write your hypothesis.</p></details>
+          <details><summary><span class="why">Why 4</span> — Almost there</summary><p>Write your hypothesis.</p></details>
+          <details><summary><span class="why">Why 5</span> — Root cause</summary><p>Write your hypothesis.</p></details>
+        </div>
+        <div>
+          <div class="card">
+            <h2 style="margin-top:0">Tips</h2>
+            <ul>
+              <li>Use data to validate each “Why”.</li>
+              <li>Stop when the answer becomes a process/policy you can change.</li>
+              <li>Branch if multiple plausible causes appear.</li>
+              <li>Capture <em>actions</em> tied to the root cause.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>6) Key Takeaways</h2>
+      <ul>
+        <li>Data analysis explains <em>what</em>; 5 Whys uncovers <em>why</em>.</li>
+        <li>Works across healthcare, finance, marketing—and beyond.</li>
+        <li>Design actions that address root causes, not symptoms.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <!-- Optional footer logo -->
+      <!-- <img src="assets/logo.png" alt="Your Company Logo small" style="height:22px; width:auto; vertical-align:middle;"> -->
+      <p>Made for “CT EDU Hub Foundations of Data” — Module 5: Business Scenarios & Applications. This page is self‑contained. You can share it or host it as is.</p>
+    </footer>
+  </div>
+
+<script>
+  // Expand/Collapse helpers
+  const expandAll = document.getElementById('expandAll');
+  const collapseAll = document.getElementById('collapseAll');
+  const allDetails = () => Array.from(document.querySelectorAll('details'));
+
+  expandAll.addEventListener('click', () => {
+    allDetails().forEach(d => d.open = true);
+  });
+  collapseAll.addEventListener('click', () => {
+    allDetails().forEach(d => d.open = false);
+    // also focus back to the first section for keyboard users
+    const first = document.querySelector('summary');
+    if(first) first.focus();
+  });
+</script>
+</body>
+</html>
+
