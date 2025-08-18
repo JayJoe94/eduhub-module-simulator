@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Module 5: Real‑World Scenarios & Applications (Ghana)</title>
+  <style>
+    :root{
+      --bg:#0b1020;            /* deep indigo */
+      --card:#11183a;          /* dark slate */
+      --muted:#a4b0ff;         /* muted indigo */
+      --text:#f5f7ff;          /* off‑white */
+      --accent:#4ade80;        /* emerald */
+      --accent-2:#60a5fa;      /* blue */
+      --warn:#f59e0b;          /* amber */
+      --danger:#ef4444;        /* red */
+      --ok:#10b981;            /* green */
+      --shadow: 0 20px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:linear-gradient(120deg, #0b1020 0%, #0d1530 60%, #0b1020 100%);
+      color:var(--text);
+      line-height:1.6;
+    }
+
+    .wrap{max-width:1100px;margin:40px auto;padding:0 18px 72px}
+
+    header{
+      background: radial-gradient(1000px 400px at 10% -20%, #22306788, transparent), radial-gradient(900px 400px at 100% 0%, #0f1b3f88, transparent);
+      border-radius: var(--radius);
+      padding: 32px 28px; box-shadow: var(--shadow);
+      position: relative; overflow: hidden;
+    }
+    .badge{display:inline-block; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#0b1020; background:var(--accent); padding:6px 10px; border-radius:999px; font-weight:700}
+    h1{margin:.4rem 0 0; font-size:clamp(1.6rem, 3.5vw, 2.4rem)}
+    .subtitle{color:var(--muted)}
+
+    .grid{display:grid; gap:18px}
+    @media (min-width:900px){
+      .grid.cols-2{grid-template-columns:1.2fr .8fr}
+      .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.06);
+      border-radius: var(--radius);
+      padding:20px 20px; box-shadow: var(--shadow);
+    }
+
+    .pill{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; background:#ffffff10; border:1px solid #ffffff1a}
+
+    .kpis{display:flex; gap:14px; flex-wrap:wrap}
+    .kpi{flex:1; min-width:180px; background:#0c1332; border:1px solid #1b2557; border-radius:16px; padding:16px}
+    .kpi b{font-size:24px}
+
+    /* Accordion */
+    details{background:#0c1332; border:1px solid #1b2557; border-radius:14px; padding:14px 16px}
+    details+details{margin-top:12px}
+    summary{list-style:none; cursor:pointer; display:flex; align-items:center; gap:10px; font-weight:700}
+    summary::-webkit-details-marker{display:none}
+    .chev{transition: transform .25s ease; display:inline-block}
+    details[open] .chev{transform: rotate(90deg)}
+    .tag{font-size:12px; padding:2px 8px; border-radius:999px; background:#1b2557; color:#cfe1ff; border:1px solid #23306a}
+
+    /* Buttons */
+    .btn{appearance:none; border:none; background:var(--accent-2); color:#06102a; padding:10px 14px; font-weight:800; border-radius:12px; cursor:pointer; box-shadow: 0 8px 20px rgba(62,132,247,.25)}
+    .btn.alt{background: #7c3aed; color:white; box-shadow:0 8px 20px rgba(124,58,237,.25)}
+    .btn.ghost{background: transparent; color: var(--text); border:1px solid #2c3a7a}
+    .btn.inline{padding:6px 10px; font-weight:700; font-size:.9rem}
+
+    /* Quiz */
+    .quiz{border:1px dashed #31408a; border-radius:16px; padding:14px; background:#0b1433}
+    .q{margin-bottom:10px; font-weight:700}
+    .choices{display:grid; gap:10px}
+    .choice{display:flex; gap:10px; align-items:flex-start; background:#0d1740; border:1px solid #20307a; border-radius:12px; padding:10px}
+    .choice input{margin-top:4px}
+    .feedback{margin-top:10px; font-weight:700}
+    .correct{color:var(--ok)}
+    .wrong{color:var(--danger)}
+
+    /* Footer */
+    footer{opacity:.9; margin-top:40px; font-size:.9rem; color:#bfc9ff}
+
+    .hr{height:1px; background:linear-gradient(90deg, transparent, #2a3a7a, transparent); margin:22px 0}
+    .muted{color:#cbd5ffbb}
+    .list-tight li{margin-bottom:8px}
+
+    /* Sticky score */
+    .scorebar{position:sticky; top:8px; z-index:5}
+    .score{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:16px; background:#0b1330; border:1px solid #1b2557}
+    .dot{width:10px;height:10px;border-radius:999px;background:var(--accent)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+     <img src="C:\Users\janya\OneDrive\Documents\Partnership_Collabo\CT EDU APP\Basics of Data Analysis\Module 5 - Business Case Study\Module 5 Interactive\assets\logo.png" alt="CT EDU HUB" style="width:300px;height:60px;">
+    <header class="card">
+       <div class="brand">
+      <h1>Module 5: RBusiness Scenarios & Applications <span class="muted">(Ghana & wider Africa)</span></h1>
+      <p class="subtitle">Connect data skills to healthcare, finance, marketing, agriculture, and public services — with localised, scenario‑based practice.</p>
+      <button onclick="location.href='index.html'">Home</button>
+      <button onclick="location.href='thefivewhys.html'">Go to The Five Whys Business Scenario</button>
+      <div class="grid cols-2" style="margin-top:10px">
+        <div class="kpis">
+          <div class="kpi"><div class="muted">Estimated time</div><b>60–90 mins</b></div>
+          <div class="kpi"><div class="muted">Activities</div><b>Quizzes • Polls • Cases</b></div>
+          <div class="kpi"><div class="muted">Focus</div><b>Ghana & Africa</b></div>
+        </div>
+        <div class="scorebar">
+          <div class="score"><span class="dot"></span> <b>Score:</b> <span id="score">0</span> / <span id="total">0</span>
+            <button class="btn ghost inline" id="resetBtn" title="Reset your quiz progress">Reset</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="card" aria-labelledby="obj">
+      <h2 id="obj">Learning Objectives</h2>
+      <ul class="list-tight">
+        <li>Recognise how data analysis powers decision‑making across sectors.</li>
+        <li>Evaluate Ghanaian/African case examples and common datasets.</li>
+        <li>Practice scenario reasoning and simple analytics choices.</li>
+        <li>Translate insights into actions and metrics for impact.</li>
+      </ul>
+    </section>
+
+    <section class="grid cols-2" aria-label="Why this matters">
+      <div class="card">
+        <h3>Why real‑world applications?</h3>
+        <p>Data turns challenges into opportunities. In Ghana, it supports better hospital capacity planning, fairer access to credit, targeted campaigns, resilient farms, and data‑driven public services.</p>
+        <div class="pill" style="margin-top:10px">Think‑Pair‑Share: Where do <b>you</b> notice data in daily life (MoMo, hospital records, e‑commerce, GPS)?</div>
+      </div>
+      <div class="card">
+        <h3>Common process (any industry)</h3>
+        <ol class="list-tight">
+          <li><b>Collect</b> (transactions, sensors, surveys, EMRs, census).</li>
+          <li><b>Clean</b> (deduplicate, handle missing, standardise).</li>
+          <li><b>Analyse</b> (descriptive → predictive → prescriptive).</li>
+          <li><b>Interpret</b> (context, bias, ethics).</li>
+          <li><b>Act</b> (dashboards, experiments, policies).</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Industry Applications (Ghana/Africa)</h2>
+
+      <!-- Healthcare -->
+      <details open>
+        <summary><span class="chev">▸</span> Healthcare <span class="tag">Korle‑Bu, CHAG, DHIMS2, malaria forecasting</span></summary>
+        <div class="hr"></div>
+        <p><b>Use cases:</b> triage prioritisation, stock forecasting, outbreak detection, referral optimisation.</p>
+        <ul class="list-tight">
+          <li><b>Dataset ideas:</b> DHIMS2 monthly morbidity, EMR visit logs, pharmacy stock & lead times, weather (rainfall).</li>
+          <li><b>KPIs:</b> wait time, bed occupancy, stock‑out rate, case fatality ratio, referral turnaround.</li>
+        </ul>
+
+        <div class="quiz" data-quiz-id="qh1">
+          <div class="q">During rainy seasons, a district hospital sees spikes in fever cases. Which <i>predictor</i> is most useful to forecast malaria admissions?</div>
+          <div class="choices" role="group" aria-label="Malaria predictors">
+            <label class="choice"><input type="radio" name="qh1"> Price of fuel</label>
+            <label class="choice"><input type="radio" name="qh1" data-correct> Recent rainfall & temperature</label>
+            <label class="choice"><input type="radio" name="qh1"> Number of hospital beds</label>
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+        </div>
+      </details>
+
+      <!-- Finance -->
+      <details>
+        <summary><span class="chev">▸</span> Finance & Banking <span class="tag">MoMo, micro‑loans, credit scoring</span></summary>
+        <div class="hr"></div>
+        <p><b>Use cases:</b> alternative credit scoring from mobile money, fraud detection, churn prediction, loan default modelling.</p>
+        <ul class="list-tight">
+          <li><b>Dataset ideas:</b> MoMo transaction histories, airtime patterns, KYC, repayment logs.</li>
+          <li><b>KPIs:</b> approval rate, default rate, NPL, CAC vs LTV, fraud alerts.</li>
+        </ul>
+
+        <div class="quiz" data-quiz-id="qf1">
+          <div class="q">A microfinance startup in Accra wants to extend loans to first‑time borrowers. Which data <b>best</b> supports 
+            inclusion without traditional credit history?</div>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="qf1" data-correct> Mobile money transaction patterns</label>
+            <label class="choice"><input type="radio" name="qf1"> Number of social media followers</label>
+            <label class="choice"><input type="radio" name="qf1"> Favourite football team</label>
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+        </div>
+      </details>
+
+      <!-- Marketing -->
+      <details>
+        <summary><span class="chev">▸</span> Marketing & Retail <span class="tag">Jumia, Melcom, basket analysis</span></summary>
+        <div class="hr"></div>
+        <p><b>Use cases:</b> product recommendations, A/B testing promotions, market basket analysis, demand forecasting.</p>
+        <ul class="list-tight">
+          <li><b>Dataset ideas:</b> POS receipts, clickstreams, campaign logs, SKU stock levels.</li>
+          <li><b>KPIs:</b> conversion rate, average order value, basket size, promo ROI.</li>
+        </ul>
+
+        <div class="quiz" data-quiz-id="qm1">
+          <div class="q">If customers frequently buy <i>cooking oil + rice</i> together, which strategy is most effective?</div>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="qm1" data-correct> Bundle the products or cross‑promote nearby</label>
+            <label class="choice"><input type="radio" name="qm1"> Stop stocking one item</label>
+            <label class="choice"><input type="radio" name="qm1"> Random discounts on unrelated items</label>
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+        </div>
+      </details>
+
+      <!-- Agriculture -->
+      <details>
+        <summary><span class="chev">▸</span> Agriculture <span class="tag">Ashanti rainfall, soil, extension services</span></summary>
+        <div class="hr"></div>
+        <p><b>Use cases:</b> crop yield prediction, weather‑aware planting, fertiliser optimisation, pest alerts via SMS.</p>
+        <ul class="list-tight">
+          <li><b>Dataset ideas:</b> rainfall & temperature, soil pH, satellite NDVI, input prices, extension visit logs.</li>
+          <li><b>KPIs:</b> yield/acre, post‑harvest loss %, input cost/acre, adoption rate.</li>
+        </ul>
+
+        <div class="quiz" data-quiz-id="qa1">
+          <div class="q">Forecast shows <b>40% less rain</b> this season in Ejura. What’s the best advice for maize farmers?</div>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="qa1" data-correct> Use drought‑tolerant varieties and adjust planting dates</label>
+            <label class="choice"><input type="radio" name="qa1"> Apply more water‑soluble fertiliser regardless</label>
+            <label class="choice"><input type="radio" name="qa1"> Ignore the forecast; proceed as usual</label>
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+        </div>
+      </details>
+
+      <!-- Public Services -->
+      <details>
+        <summary><span class="chev">▸</span> Public Services & Government <span class="tag">GSS, census, resource allocation</span></summary>
+        <div class="hr"></div>
+        <p><b>Use cases:</b> school & clinic siting, road maintenance prioritisation, targeting social programmes, tax analytics.</p>
+        <ul class="list-tight">
+          <li><b>Dataset ideas:</b> census & PHC, district health & education stats, road condition surveys, geospatial layers.</li>
+          <li><b>KPIs:</b> service coverage, travel time to facility, enrolment ratio, equity indices.</li>
+        </ul>
+
+        <div class="quiz" data-quiz-id="qp1">
+          <div class="q">Census shows a district with a <b>surge of children under 10</b>. What should be prioritised first?</div>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="qp1" data-correct> Building/expanding basic schools & teacher deployment</label>
+            <label class="choice"><input type="radio" name="qp1"> New tertiary campus</label>
+            <label class="choice"><input type="radio" name="qp1"> Luxury housing estates</label>
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+        </div>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>Quick Scenario Practice</h2>
+      <p><b>Scenario:</b> A clinic faces <i>monthly medicine stock‑outs</i>.</p>
+      <ol>
+        <li>Pull last 18 months of pharmacy issues & receipts; link to outpatient visits.</li>
+        <li>Seasonality check (month, rainfall); compute moving average demand.</li>
+        <li>Set reorder point = avg lead time × demand + safety stock.</li>
+        <li>Track KPIs: stock‑out days/month, forecast error (MAPE), expiries.</li>
+      </ol>
+
+      <div class="quiz" data-quiz-id="qs1">
+        <div class="q">Which metric best evaluates the <b>forecast accuracy</b> of medicine demand?</div>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="qs1"> Average Order Value (AOV)</label>
+          <label class="choice"><input type="radio" name="qs1" data-correct> MAPE (Mean Absolute Percentage Error)</label>
+          <label class="choice"><input type="radio" name="qs1"> Click‑Through Rate (CTR)</label>
+        </div>
+        <div class="feedback" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Knowledge Check</h2>
+      <div class="grid cols-3">
+        <div class="quiz" data-quiz-id="kc1">
+          <div class="q">Which industry uses predictive analytics to forecast disease outbreaks?</div>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="kc1" data-correct> Healthcare</label>
+            <label class="choice"><input type="radio" name="kc1"> Finance</label>
+            <label class="choice"><input type="radio" name="kc1"> Marketing</label>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-quiz-id="kc2">
+          <div class="q">Which Ghanaian service commonly supports alternative credit scoring?</div>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="kc2" data-correct> Mobile money transaction data</label>
+            <label class="choice"><input type="radio" name="kc2"> Hospital records</label>
+            <label class="choice"><input type="radio" name="kc2"> E‑commerce reviews</label>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-quiz-id="kc3">
+          <div class="q">Which data most supports farmers’ crop decisions?</div>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="kc3" data-correct> Weather & soil data</label>
+            <label class="choice"><input type="radio" name="kc3"> Hospital patient flows</label>
+            <label class="choice"><input type="radio" name="kc3"> Social media likes</label>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Reflection & Next Steps</h2>
+      <p class="muted">Data is local: from MoMo agents to maize fields, context matters. Use the same analysis process, tuned to Ghanaian realities, to produce impact.</p>
+      <div class="pill">Extension: Sketch a dashboard with 4 KPIs for any one sector. What data sources, refresh cadence, and actions will you propose?</div>
+    </section>
+
+    <footer>
+      <div class="hr"></div>
+      <div>© Module 5 – Real‑World Scenarios & Applications · You may reuse and adapt for class.</div>
+    </footer>
+  </div>
+
+  <script>
+    // Utility to update total questions
+    function updateTotals(){
+      const quizzes = document.querySelectorAll('.quiz');
+      document.getElementById('total').textContent = quizzes.length;
+    }
+
+    // Score state per quiz stored in sessionStorage
+    const SCORE_KEY = 'module5_score';
+    const DONE_KEY  = 'module5_done';
+
+    const state = {
+      score: Number(sessionStorage.getItem(SCORE_KEY) || 0),
+      done: JSON.parse(sessionStorage.getItem(DONE_KEY) || '{}')
+    };
+
+    function saveState(){
+      sessionStorage.setItem(SCORE_KEY, String(state.score));
+      sessionStorage.setItem(DONE_KEY, JSON.stringify(state.done));
+    }
+
+    function renderScore(){
+      document.getElementById('score').textContent = state.score;
+    }
+
+    function lockQuiz(q){
+      q.querySelectorAll('input').forEach(i=> i.disabled = true);
+    }
+
+    function handleChoice(e){
+      const input = e.target;
+      if(input.tagName !== 'INPUT') return;
+
+      const quiz = input.closest('.quiz');
+      const id = quiz.dataset.quizId;
+      const correct = input.hasAttribute('data-correct');
+      const feedback = quiz.querySelector('.feedback');
+
+      // Prevent re‑answering if already done
+      if(state.done[id]) return;
+
+      if(correct){
+        feedback.textContent = '✅ Correct!';
+        feedback.className = 'feedback correct';
+        state.score += 1;
+        state.done[id] = true;
+        lockQuiz(quiz);
+        renderScore();
+        saveState();
+      } else {
+        feedback.textContent = '❌ Try again';
+        feedback.className = 'feedback wrong';
+      }
+    }
+
+    function initQuizzes(){
+      document.querySelectorAll('.quiz').forEach(q => {
+        q.addEventListener('click', handleChoice);
+        // restore done state
+        const id = q.dataset.quizId;
+        if(state.done[id]){
+          lockQuiz(q);
+          const fb = q.querySelector('.feedback');
+          fb.textContent = '✔️ Already answered';
+          fb.className = 'feedback correct';
+        }
+      });
+    }
+
+    function initReset(){
+      const btn = document.getElementById('resetBtn');
+      btn.addEventListener('click', ()=>{
+        if(confirm('Reset your quiz progress and score?')){
+          state.score = 0; state.done = {}; saveState(); renderScore();
+          document.querySelectorAll('.quiz').forEach(q=>{
+            q.querySelectorAll('input').forEach(i=>{i.disabled=false; i.checked=false});
+            const fb = q.querySelector('.feedback'); fb.textContent=''; fb.className='feedback';
+          });
+        }
+      });
+    }
+
+    // Accordion chevron init (in case browser doesn’t show triangle)
+    document.querySelectorAll('summary').forEach(s=>{
+      s.addEventListener('click', ()=>{
+        const chev = s.querySelector('.chev');
+        setTimeout(()=>{
+          // sync rotation after toggle
+          if(s.parentElement.open){ chev.style.transform='rotate(90deg)'; }
+          else { chev.style.transform='rotate(0deg)'; }
+        }, 0);
+      })
+    })
+
+    updateTotals();
+    renderScore();
+    initQuizzes();
+    initReset();
+  </script>
+</body>
+</html>
